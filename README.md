@@ -1,5 +1,4 @@
 # densdep_tentmap
-Simulation tools for density-dependent tent map dynamics
 
 Simulation tools for iterating density dependent tent maps
 ==========================================================
