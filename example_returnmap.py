@@ -19,10 +19,17 @@ n_iter: int = 10000
 n_iter_transient: int = 100
 n: int = 10000  # only for discrete sim; size of ensemble
 
+# paths
+plt_path = 'Plots'
+
+
 # ============================================================
 deltas = delta_range[0] + (delta_range[1] - delta_range[0]) * np.arange(n_delta_bins + 1) / n_delta_bins
-os.makedirs('./ReturnMap/SimDiscrete', exist_ok=True)
-os.makedirs('./ReturnMap/SimVolume', exist_ok=True)
+
+os.makedirs(f'.{os.sep}{plt_path}', exist_ok=True)
+os.makedirs(f'.{os.sep}{plt_path}{os.sep}ReturnMap', exist_ok=True)
+os.makedirs(f'.{os.sep}{plt_path}{os.sep}ReturnMap{os.sep}SimDiscrete', exist_ok=True)
+os.makedirs(f'.{os.sep}{plt_path}{os.sep}ReturnMap{os.sep}SimVolume', exist_ok=True)
 
 # initial conditions discrete sim
 x0: np.ndarray = (0.5 + np.arange(n)) / n
@@ -90,3 +97,5 @@ for i, delta in enumerate(deltas):
 
 t2 = time.perf_counter()
 print(f"Time elapsed: {t2-t1} secs.")
+
+# %%

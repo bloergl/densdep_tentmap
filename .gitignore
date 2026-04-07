@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# User-created files
+OLD1/
+OLD2/
+OLD3/
+OLD4/
+OLD5/
+OLD6/
+OLD7/
+OLD8/
+Plots/
+Results/
+pyproject.toml
+uv.lock
+
+
+

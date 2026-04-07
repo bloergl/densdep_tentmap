@@ -32,6 +32,11 @@ sim_tools.py
 Some tools which might be useful, e.g. for making a movie
 from a set of image files.
 
+sim_delta.py
+------------
+Tools for simulating/analyzing densities which are composed
+of a set of delta-distributions.
+
 example_basicusage.py
 ----------------------
 Demonstrates the basic usage of the two iteration methods, and
@@ -49,6 +54,30 @@ Computes the map a[n] -> a[n+1] for different values of the integral
 parameter delta and for different computation methods (from 0.5 to 0.9).
 When executing sim_tools.py directly, it uses the movie making function
 to generate an animation of the corresponding results.
+
+ana_steadystate.py
+------------------
+Code for analytically pinpointing a steady state (invariant density)
+which was identified in the bifurcation diagram at around d=0.75
+
+job_bifurcation_diagrams.py
+---------------------------
+Computes diverse bifurcation diagrams; i.e. for tent map, logistic map,
+density-dependent tent map.
+
+job_initial_conditions.py
+-------------------------
+Creates random sets of initial conditions and computes the corresponding
+bifurcation diagrams. Intended for checking whether different initial
+conditions converge to the same quasi-stationary dynamics (attractors).
+
+job_timeseries_a.py
+-------------------
+Generates time series for a, for a selected range of d-values. The results
+can be stored and later used in 'job_bifurcation_diagrams.py' to generate
+corresponding bifurcation diagrams.
+
+
 
 
 

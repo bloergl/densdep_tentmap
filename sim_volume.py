@@ -145,7 +145,67 @@ def plot_density(x: np.ndarray, v: np.ndarray) -> None:
     return
 
 
-def check_consistency(x: np.ndarray, v: np.ndarray, precision: float, default_type: type = np.float64):
+# construct some random initial state
+def construct_random_density(
+    n_vols: int,
+    x_start: float = 0.0,
+    x_end: float = 1.0,
+    compact: bool = True,
+    rng_seed: int | None = None
+) -> list[np.ndarray, np.ndarray]: 
+    """
+    Construct a random initial density with n_vols subvolumes
+    which covers the range from x_start to x_end.
+
+    When compact=False, random spaces are inserted between each subvolume
+    """
+
+    assert (x_start >= 0.0) and (x_start < x_end), "x_start must >= 0 and < x_end"
+    assert (x_end <= 1.0), "x_end must <= 1.0"
+    assert (n_vols >= 1), "n_vols must be at least 1"
+
+    rng = np.random.default_rng(rng_seed)
+
+    # construct lists for endpoints and volumes
+    x_dens: list = []
+    v_dens: list = []
+
+    # insert empty volume before x_start, if required
+    if x_start > 0.0:
+        x_dens.append(x_start)
+        v_dens.append(0.0)
+    
+    # add volumes, normalized to one
+    n_skip = 1 + (compact == False)
+    v_add = rng.random((n_vols,))
+    v_add /= v_add.sum()
+    x_add = x_start + (x_end - x_start) * \
+        (1.0 - rng.random((n_vols - 1) * n_skip,))
+    x_add.sort()
+    n_skip = 1 + (compact == False)
+    for i_vol in range(n_vols - 1):
+        x_dens.append(x_add[i_vol * n_skip])
+        v_dens.append(v_add[i_vol])
+        if (compact == False):
+            x_dens.append(x_add[i_vol * n_skip + 1])
+            v_dens.append(0.0)
+    x_dens.append(x_end)
+    v_dens.append(v_add[n_vols - 1])
+
+    # insert empty volume after x_end, if required
+    if x_end < 1.0:
+        x_dens.append(1.0)
+        v_dens.append(0.0)
+
+    return np.array(x_dens), np.array(v_dens)
+
+
+def check_consistency(
+    x: np.ndarray,
+    v: np.ndarray,
+    precision: float,
+    default_type: type = np.float64
+) -> bool:
     """
     Checks consistency of a density (x, v), i.e.:
     normalization, range, positivity, ...
@@ -168,7 +228,7 @@ def check_consistency(x: np.ndarray, v: np.ndarray, precision: float, default_ty
         assert np.abs(v_sum - 1) < precision, "sum(v) must be 1 within precision lims!"
         print(f"WARNING: sum(v) error is {v_sum - 1}, but within req precision")
 
-    return
+    return True
 
 
 def iterate_densdep_tent_map_vols(
@@ -386,7 +446,9 @@ if __name__ == "__main__":
     #   test binning of densities
     # test_mode = 4:
     #   test density-dependent tent map iteration
-    test_mode = 4
+    # test_mode = 5:
+    #   test construct and check/display random initial densities
+    test_mode = 5
     if test_mode == 1:
 
         # define density f from three volumes
@@ -457,4 +519,13 @@ if __name__ == "__main__":
         x_bin, v_bin = bin_volumes(x=x_iter[iter_show], v=v_iter[iter_show], n_bins=100)
         plot_density(x=x_iter[iter_show], v=v_iter[iter_show])
         plt.plot(x_bin, v_bin, 'ko-')
+        plt.show()
+
+    if test_mode == 5:
+        x, v = construct_random_density(n_vols=10, x_start=0.2, x_end=0.8, compact=True, rng_seed=4242)
+        print(f"x={x}")
+        print(f"v={v}")
+        if check_consistency(x=x, v=v, precision=eps):
+            print("Consistency check worked out!")
+        plot_density(x=x, v=v)
         plt.show()

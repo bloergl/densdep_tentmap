@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 def tent_map(a: float, x: np.ndarray) -> np.ndarray:
     """ Computes the tent map with parameter 'a' on a vector 'x'
-
     """
     return a * np.min(np.concatenate((x[np.newaxis, :], 1 - x[np.newaxis, :])), axis=0)
 

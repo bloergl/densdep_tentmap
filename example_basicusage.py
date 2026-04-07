@@ -1,15 +1,21 @@
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # import tools for simulation
 import sim_volume as sv
 import sim_discrete as sd
 
+# paths
+plt_path = 'Plots'
+FLAG_PLOT = True
+os.makedirs(f'.{os.sep}{plt_path}', exist_ok=True)
+
 # common parameters
 a_uppercase: float = 0.0
-delta: float = 0.6
-n_iter: int = 200
+delta: float = 0.7
+n_iter: int = 100
 
 # discrete sim with constant density initial condition
 print("Performing discrete simulation...")
@@ -64,6 +70,7 @@ plt.plot(t[1:n_iter_display + 1], a_iter_sd[:n_iter_display], label='discrete')
 plt.plot(t[1:n_iter_display + 1], a_iter_sv[:n_iter_display], label='volume')
 plt.xlim([1, n_iter_display])
 plt.legend()
+plt.title(f"n={n} for discrete sim")
 plt.xlabel('iteration n')
 plt.ylabel('a')
 
@@ -97,6 +104,9 @@ plt.xlabel("iteration n")
 plt.ylabel("x")
 plt.title("f(x) - difference")
 
-# p_name = f"comp_densdep_tent_map_A{a_uppercase:.3f}_delta{delta:.3f}.png"
-# plt.savefig(p_name, dpi=300)
+if FLAG_PLOT:
+    str_a_uppercase = int(a_uppercase * 1000)
+    str_delta = int(delta * 1000)
+    p_name = f"{plt_path}{os.sep}comp_densdep_tent_map_A{str_a_uppercase:04}_delta{str_delta:04}_n{n}.png"
+    plt.savefig(p_name, dpi=300)
 plt.show()
